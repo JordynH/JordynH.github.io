@@ -37,20 +37,23 @@
     </style>
 </head>
 <body>
-    <h1 class="name">J</h1>
-    <h1 class="name">o</h1>
-    <h1 class="name">r</h1>
-    <h1 class="name">d</h1>
-    <h1 class="name">y</h1>
-    <h1 class="name">n</h1>
-    <h1 class="name">&nbsp;</h1>
-    <h1 class="name">H</h1>
-    <h1 class="name">e</h1>
-    <h1 class="name">i</h1>
-    <h1 class="name">l</h1>
+    <div class="name-container"></div>
+        <h1 class="name">J</h1>
+        <h1 class="name">o</h1>
+        <h1 class="name">r</h1>
+        <h1 class="name">d</h1>
+        <h1 class="name">y</h1>
+        <h1 class="name">n</h1>
+        <h1 class="name">&nbsp;</h1>
+        <h1 class="name">H</h1>
+        <h1 class="name">e</h1>
+        <h1 class="name">i</h1>
+        <h1 class="name">l</h1>
+    </div>
 
     <script>
         window.addEventListener('DOMContentLoaded', function() {
+            const nameContainer = document.querySelector('.name-container');
             const names = document.querySelectorAll('.name');
             let delay = 0;
 
