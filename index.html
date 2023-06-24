@@ -38,30 +38,24 @@
 </head>
 <body>
     <div class="name-container">
-        <h1 class="name">J</h1>
-        <h1 class="name">o</h1>
-        <h1 class="name">r</h1>
-        <h1 class="name">d</h1>
-        <h1 class="name">y</h1>
-        <h1 class="name">n</h1>
-        <h1 class="name">&nbsp;</h1>
-        <h1 class="name">H</h1>
-        <h1 class="name">e</h1>
-        <h1 class="name">i</h1>
-        <h1 class="name">l</h1>
+        <h1 class="name" style="animation-delay: 0s;">J</h1>
+        <h1 class="name" style="animation-delay: 0.2s;">o</h1>
+        <h1 class="name" style="animation-delay: 0.4s;">r</h1>
+        <h1 class="name" style="animation-delay: 0.6s;">d</h1>
+        <h1 class="name" style="animation-delay: 0.8s;">y</h1>
+        <h1 class="name" style="animation-delay: 1s;">n</h1>
+        <h1 class="name" style="animation-delay: 1.2s;">&nbsp;</h1>
+        <h1 class="name" style="animation-delay: 1.4s;">H</h1>
+        <h1 class="name" style="animation-delay: 1.6s;">e</h1>
+        <h1 class="name" style="animation-delay: 1.8s;">i</h1>
+        <h1 class="name" style="animation-delay: 2s;">l</h1>
     </div>
 
     <script>
         window.addEventListener('DOMContentLoaded', function() {
-            const nameContainer = document.querySelector('.name-container');
             const names = document.querySelectorAll('.name');
-            let delay = 0;
-
             names.forEach(function(name) {
-                setTimeout(function() {
-                    name.style.opacity = 1;
-                }, delay);
-                delay += 200;
+                name.style.opacity = 1;
             });
         });
     </script>
