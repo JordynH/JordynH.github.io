@@ -11,21 +11,56 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
 
-        h1 {
+        .name {
             font-size: 6rem;
             color: #fff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease;
+            opacity: 0;
+            animation-name: fadeIn;
+            animation-duration: 2s;
+            animation-fill-mode: forwards;
         }
 
-        h1:hover {
-            transform: translateY(-10px);
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Jordyn Heil</h1>
+    <h1 class="name">J</h1>
+    <h1 class="name">o</h1>
+    <h1 class="name">r</h1>
+    <h1 class="name">d</h1>
+    <h1 class="name">y</h1>
+    <h1 class="name">n</h1>
+    <h1 class="name">&nbsp;</h1>
+    <h1 class="name">H</h1>
+    <h1 class="name">e</h1>
+    <h1 class="name">i</h1>
+    <h1 class="name">l</h1>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const names = document.querySelectorAll('.name');
+            let delay = 0;
+
+            names.forEach(function(name) {
+                setTimeout(function() {
+                    name.style.opacity = 1;
+                }, delay);
+                delay += 200;
+            });
+        });
+    </script>
 </body>
 </html>
