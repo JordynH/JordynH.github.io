@@ -81,7 +81,7 @@
 </body>
 </html> -->
 
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Jordyn Heil</title>
@@ -205,5 +205,185 @@
         // Call the typing effect function after a delay
         setTimeout(typeEffect, 1200);
       </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jordyn Heil</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .intro-container {
+        	background: linear-gradient(to bottom, #b56db4, #3bb3c1, #ffffff);
+        }
+        
+        .title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto Mono', monospace;
+            overflow: hidden;
+        }
+
+        .topleft {
+            position: relative;
+            top:-130px;
+            left: 32px;
+            font-size: 36px;
+            color: #000000;
+        }
+
+        .name-container {
+            display: flex;
+            flex-wrap: nowrap; /* Prevent text from wrapping */
+        }
+
+        .name {
+            font-size: 6rem;
+            color: #000000;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation-name: fadeIn;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+        
+        .typing-text {
+        	position: absolute;
+            top: 450px;
+            right: -1;
+            width: 500px;
+            height: 100px;
+            font-size: 30px;
+        }
+        
+        .scroll-message {
+            background: #ffffff;
+            color: #000000;
+            padding: 0px;
+            text-align: left;
+            font-size: 24px;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+	<div class="intro-container">
+    	<div class="title">
+        <div class="topleft">Hi, I'm</div>
+        <div class="name-container">
+            <h1 class="name">J</h1>
+            <h1 class="name">o</h1>
+            <h1 class="name">r</h1>
+            <h1 class="name">d</h1>
+            <h1 class="name">y</h1>
+            <h1 class="name">n</h1>
+            <h1 class="name">&nbsp;</h1>
+            <h1 class="name">H</h1>
+            <h1 class="name">e</h1>
+            <h1 class="name">i</h1>
+            <h1 class="name">l</h1>
+        </div>
+
+        <script>
+            window.addEventListener('DOMContentLoaded', function() {
+                const names = document.querySelectorAll('.name');
+                let delay = 0;
+
+                names.forEach(function(name) {
+                    name.style.opacity = 0;
+                    name.style.animationDelay = delay + 's';
+                    delay += 0.03;
+                    name.addEventListener('animationend', function() {
+                        name.style.opacity = 1;
+                    });
+                });
+            });
+        </script>
+      </div>
+
+
+      <div class="typing-text"></div>
+      <script>
+          // Define the text to be typed
+          const text = "ECE major at Vanderbilt";
+
+          // Get the element where the typing effect will be displayed
+          const typingTextElement = document.querySelector('.typing-text');
+
+          // Set the initial text content to an empty string
+          typingTextElement.textContent = '';
+
+          // Function to simulate typing effect
+          function typeEffect() {
+              let i = 0;
+              const speed = 50; // Typing speed in milliseconds
+
+              // Create an interval that adds one character at a time
+              const typeInterval = setInterval(() => {
+                  typingTextElement.textContent += text[i];
+                  i++;
+
+                  // Check if the whole text has been typed
+                  if (i === text.length) {
+                      clearInterval(typeInterval); // Stop the interval
+                  }
+              }, speed);
+          }
+
+          // Call the typing effect function after a delay
+          setTimeout(typeEffect, 1200);
+        </script>
+      </div>
+      
+      <div class="scroll-message">
+        <br>
+        <br>
+        Exciting things to come!
+        <br>
+        <br>
+        <br>
+___________________________$$
+ _________________________$$$$
+ _______________________$$$$$$
+ ______________________$$$$$$
+ ______________________$$$$
+ ______________________$$
+ _________$$$$$$$$$$$$$_$$$$$$$$$$$$$
+ ______$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ ____$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ ___$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ __$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ _$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ _$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ _$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ _$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ __$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ ___$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ ____$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ _____$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ ______$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ ________$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ __________$$$$$$$$$$$$$$$$$$$$$$$$$
+ ____________$$$$$$$$$$$$$$$$$$$$$
+ ______________$$$$$$$$__$$$$$$$
+    </div>
 </body>
 </html>
