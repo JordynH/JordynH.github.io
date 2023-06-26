@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Jordyn Heil</title>
@@ -63,10 +63,98 @@
             names.forEach(function(name) {
                 name.style.opacity = 0;
                 name.style.animationDelay = delay + 's';
-                delay += 0.2;
+                delay += 0.1;
                 name.addEventListener('animationend', function() {
                     name.style.opacity = 1;
                 });
+            });
+        });
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jordyn Heil</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #2980b9, #2c3e50);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .header {
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 1rem;
+            margin-left: 1rem;
+        }
+
+        .name {
+            font-size: 6rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation-name: fadeIn;
+            animation-duration: 2s;
+            animation-fill-mode: forwards;
+        }
+
+        .description {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 1rem;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <!-- Add the link to Roboto Mono font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">Hi, I'm</div>
+    <div class="name-container">
+        <h1 class="name">J</h1>
+        <h1 class="name">o</h1>
+        <h1 class="name">r</h1>
+        <h1 class="name">d</h1>
+        <h1 class="name">y</h1>
+        <h1 class="name">n</h1>
+        <h1 class="name">&nbsp;</h1>
+        <h1 class="name">H</h1>
+        <h1 class="name">e</h1>
+        <h1 class="name">i</h1>
+        <h1 class="name">l</h1>
+    </div>
+    <div class="description">Electrical &amp; Computer Engineering Major at Vanderbilt University</div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const nameContainer = document.querySelector('.name-container');
+            const names = document.querySelectorAll('.name');
+            let delay = 0;
+
+            names.forEach(function(name) {
+                setTimeout(function() {
+                    name.style.opacity = 1;
+                }, delay);
+                delay += 100;
             });
         });
     </script>
