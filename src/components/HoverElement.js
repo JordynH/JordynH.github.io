@@ -1,6 +1,8 @@
+/** @jsxImportSource @emotion/react */
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import './HoverElement.css';
 
 const StyledMotionDiv = styled(motion.div)`
   display: inline-block;
@@ -10,13 +12,13 @@ const StyledMotionDiv = styled(motion.div)`
 export const HoverElement = ({ children, intensity = 0.2 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const elementRef = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (!isHovered) return;
+      if (!isHovered || !elementRef.current) return;
       
-      const element = e.currentTarget;
-      const rect = element.getBoundingClientRect();
+      const rect = elementRef.current.getBoundingClientRect();
       
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
@@ -30,6 +32,8 @@ export const HoverElement = ({ children, intensity = 0.2 }) => {
 
   return (
     <StyledMotionDiv
+      ref={elementRef}
+      className="hover-element"
       animate={{
         x: isHovered ? position.x : 0,
         y: isHovered ? position.y : 0,
@@ -39,7 +43,7 @@ export const HoverElement = ({ children, intensity = 0.2 }) => {
         setIsHovered(false);
         setPosition({ x: 0, y: 0 });
       }}
-      transition={{ type: 'spring', stiffness: 150, damping: 15 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
       {children}
     </StyledMotionDiv>
