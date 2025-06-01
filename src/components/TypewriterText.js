@@ -7,25 +7,31 @@ const TypewriterContainer = styled(motion.div)`
   color: #ffffff;
   opacity: 0.9;
   margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
   min-height: 1.5em;
+  width: 100%;
 `;
 
 const TextContainer = styled.div`
-  display: flex;
-  align-items: center;
+  display: inline;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+`;
+
+const TextSpan = styled.span`
+  display: inline;
 `;
 
 const Cursor = styled(motion.span)`
+  display: inline;
   margin-left: 2px;
   font-weight: bold;
 `;
 
 const Emoji = styled(motion.span)`
-  margin-left: 8px;
-  margin-right: 2px;
+  display: inline;
+  margin-left: 0.5rem;
   font-size: 1.3rem;
+  vertical-align: baseline;
 `;
 
 const TypewriterText = ({ text, className }) => {
@@ -116,7 +122,7 @@ const TypewriterText = ({ text, className }) => {
       className={className}
     >
       <TextContainer>
-        {displayText}
+        <TextSpan>{displayText}</TextSpan>
         {showEmoji && (
           <Emoji>
             {currentEmoji}

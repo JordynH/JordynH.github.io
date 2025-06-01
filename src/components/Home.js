@@ -45,6 +45,7 @@ const Bio = styled(motion.div)`
 
     span {
       font-size: 2.2rem;
+      margin-left: 8px;
     }
   }
 `;
@@ -91,6 +92,11 @@ const Highlight = styled.span`
   }
 `;
 
+const WavingEmoji = styled(motion.span)`
+  display: inline-block;
+  transform-origin: 70% 70%;
+`;
+
 const paragraphVariants = {
   hidden: { opacity: 0, x: -20 },
   visible: { opacity: 1, x: 0 }
@@ -111,7 +117,17 @@ const Home = () => {
           transition={{ duration: 0.6 }}
         >
           <h2>
-            Hello! <span>👋</span>
+            Hello! <WavingEmoji 
+              animate={{ 
+                rotate: [0, 14, -8, 14, -4, 10, 0],
+              }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                repeatDelay: 1,
+                ease: "easeInOut"
+              }}
+            >👋</WavingEmoji>
           </h2>
           <Paragraph
             variants={paragraphVariants}
