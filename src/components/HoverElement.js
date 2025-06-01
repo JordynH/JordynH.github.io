@@ -1,51 +1,57 @@
 /** @jsxImportSource @emotion/react */
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
-import { useState, useEffect, useRef } from 'react';
 import './HoverElement.css';
 
-const StyledMotionDiv = styled(motion.div)`
+const HoverContainer = styled(motion.div)`
+  position: relative;
   display: inline-block;
-  transition: transform 0.2s ease;
 `;
 
-export const HoverElement = ({ children, intensity = 0.2 }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+const HoverElement = ({ children }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const elementRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!isHovered || !elementRef.current) return;
-      
-      const rect = elementRef.current.getBoundingClientRect();
-      
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      
-      setPosition({ x: x * intensity, y: y * intensity });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, [isHovered, intensity]);
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    
+    // Calculate distance from center
+    const distance = Math.sqrt(x * x + y * y);
+    const maxDistance = rect.width / 2;
+    const scale = Math.min(1, distance / maxDistance);
+    
+    // Apply exponential falloff
+    const falloff = Math.exp(-scale * 2);
+    
+    setMousePosition({
+      x: x * falloff,
+      y: y * falloff,
+    });
+  };
 
   return (
-    <StyledMotionDiv
-      ref={elementRef}
-      className="hover-element"
-      animate={{
-        x: isHovered ? position.x : 0,
-        y: isHovered ? position.y : 0,
-      }}
+    <HoverContainer
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setPosition({ x: 0, y: 0 });
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+      animate={{
+        x: isHovered ? mousePosition.x * 0.15 : 0,
+        y: isHovered ? mousePosition.y * 0.15 : 0,
+        scale: isHovered ? 1.05 : 1,
       }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      transition={{
+        type: "spring",
+        stiffness: 200,
+        damping: 20,
+        mass: 0.2,
+      }}
     >
       {children}
-    </StyledMotionDiv>
+    </HoverContainer>
   );
-}; 
+};
+
+export default HoverElement; 
