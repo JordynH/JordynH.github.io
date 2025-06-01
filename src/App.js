@@ -20,6 +20,7 @@ const ProfileSection = styled(motion.section)`
   flex-direction: column;
   align-items: center;
   padding: 2rem;
+  padding-top: 4rem;
   text-align: center;
 `;
 
@@ -48,7 +49,7 @@ const Name = styled.h1`
 const SocialLinks = styled.div`
   display: flex;
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 `;
 
 const SocialLink = styled.a`

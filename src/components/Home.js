@@ -12,7 +12,7 @@ const Bio = styled(motion.div)`
   background: rgba(52, 152, 219, 0.08);
   padding: 2.5rem;
   border-radius: 20px;
-  margin-top: 2rem;
+  margin-top: 1rem;
   border: 1px solid rgba(52, 152, 219, 0.2);
   border-left: 4px solid #3498db;
   line-height: 1.8;

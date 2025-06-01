@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 const ResumeContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem 2rem;
 `;
 
 const SectionTitle = styled.h2`

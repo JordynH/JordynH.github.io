@@ -6,7 +6,7 @@ const TypewriterContainer = styled(motion.div)`
   font-size: 1.5rem;
   color: #ffffff;
   opacity: 0.9;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   min-height: 1.5em;
   width: 100%;
 `;
