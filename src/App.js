@@ -2,17 +2,33 @@ import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
 import Navigation from './components/Navigation';
 import Home from './components/Home';
 import Resume from './components/Resume';
 import TypewriterText from './components/TypewriterText';
 import HoverElement from './components/HoverElement';
+import Tilt from 'react-vanilla-tilt';
 import './App.css';
+
+const gradientAnimation = keyframes`
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+`;
 
 const AppContainer = styled.div`
   min-height: 100vh;
-  background-color: #1a1a1a;
+  width: 100%;
   color: #ffffff;
+  position: relative;
+  overflow-x: hidden;
 `;
 
 const ProfileSection = styled(motion.section)`
@@ -22,6 +38,22 @@ const ProfileSection = styled(motion.section)`
   padding: 2rem;
   padding-top: 4rem;
   text-align: center;
+`;
+
+const TiltWrapper = styled.div`
+  background: transparent;
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
+
+  .tilt {
+    background: transparent !important;
+    transform-style: preserve-3d;
+    box-shadow: none !important;
+  }
+
+  .vanilla-tilt-inner {
+    background: transparent !important;
+  }
 `;
 
 const ProfileImage = styled(motion.img)`
@@ -34,6 +66,7 @@ const ProfileImage = styled(motion.img)`
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   object-fit: cover;
   object-position: center;
+  transform: translateZ(20px);
 
   &:hover {
     box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
@@ -75,12 +108,24 @@ function App() {
         >
           <Name>Jordyn Heil</Name>
           <TypewriterText text="Electrical and Computer Engineer" />
-          <HoverElement>
-            <ProfileImage
-              src="/images/profile.jpg"
-              alt="Jordyn Heil"
-            />
-          </HoverElement>
+          <TiltWrapper>
+            <Tilt
+              options={{
+                scale: 1.05,
+                speed: 1000,
+                max: 15,
+                glare: false,
+                reverse: true
+              }}
+              className="tilt"
+              style={{ background: 'transparent' }}
+            >
+              <ProfileImage
+                src="/images/profile.jpg"
+                alt="Jordyn Heil"
+              />
+            </Tilt>
+          </TiltWrapper>
           <SocialLinks>
             <SocialLink href="https://github.com/JordynH" target="_blank" rel="noopener noreferrer">
               <i className="fab fa-github"></i>

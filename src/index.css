@@ -1,19 +1,61 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+html {
+  height: 100%;
+  background: #1a1a1a;
 }
 
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #1a1a1a;
+  position: relative;
   color: #ffffff;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    #1a1a1a 0%,
+    #1a1a1a 35%,
+    #1a1f1f 45%,
+    #1f1a20 50%,
+    #1f1a1a 60%,
+    #1a1a1a 65%,
+    #1a1a1a 85%,
+    #2a2a2a 95%,
+    #1a1a1a 100%
+  );
+  animation: sweep 8s ease infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes sweep {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(25%, 25%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 h1, h2, h3, h4, h5, h6 {
