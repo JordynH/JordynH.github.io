@@ -149,10 +149,7 @@ const Home = () => {
             transition={{ duration: 0.5 }}
           >
             When I'm not immersed in code or tinkering with robots, you'll find me exploring the great 
-            outdoors on hiking trails, challenging myself with Rubik's cubes (I love puzzles!), diving 
-            into fascinating non-fiction books, or unwinding with some video games. I believe in 
-            maintaining a balance between technical pursuits and personal interests, as they both 
-            contribute to creative problem-solving and continuous learning.
+            outdoors on hiking trails, solving rubik's cubes, diving into fascinating non-fiction books, or unwinding with some video games. Feel free to reach out if you'd like to chat about anything!
           </Paragraph>
           <Paragraph
             variants={paragraphVariants}
