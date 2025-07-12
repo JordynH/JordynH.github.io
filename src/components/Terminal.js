@@ -12,16 +12,6 @@ const TerminalOverlay = styled(motion.div)`
   z-index: 9999;
   display: flex;
   flex-direction: column;
-`;
-
-const MatrixRain = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
   
   &::before {
     content: '';
@@ -31,19 +21,22 @@ const MatrixRain = styled.div`
     width: 100%;
     height: 100%;
     background: linear-gradient(
-      90deg,
       transparent 0%,
-      rgba(0, 255, 0, 0.1) 50%,
+      rgba(0, 255, 0, 0.02) 50%,
       transparent 100%
     );
-    animation: matrix-sweep 3s ease-in-out;
+    background-size: 100% 2px;
+    animation: scanline 0.1s linear infinite;
+    pointer-events: none;
   }
   
-  @keyframes matrix-sweep {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
   }
 `;
+
+
 
 const TerminalContainer = styled.div`
   background: #000000;
@@ -59,25 +52,21 @@ const TerminalContainer = styled.div`
   display: flex;
   flex-direction: column;
   
-  &::before {
+  /* CRT monitor glow effect */
+  &::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      rgba(0, 255, 0, 0.03) 50%,
-      transparent 50%
+    background: radial-gradient(
+      ellipse at center,
+      rgba(0, 255, 0, 0.1) 0%,
+      transparent 70%
     );
-    background-size: 100% 4px;
     pointer-events: none;
-    animation: scan 10s linear infinite;
-  }
-  
-  @keyframes scan {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
+    z-index: -1;
   }
 `;
 
@@ -117,14 +106,7 @@ const Input = styled.input`
   }
 `;
 
-const Cursor = styled.span`
-  animation: blink 1s infinite;
   
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-  }
-`;
 
 
 
@@ -155,6 +137,11 @@ const ExitButton = styled.button`
     background: #00ff00;
     color: #000000;
   }
+  
+  /* Hide on mobile devices */
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Terminal = () => {
@@ -162,18 +149,27 @@ const Terminal = () => {
   const [currentCommand, setCurrentCommand] = useState('');
   const [commandHistory, setCommandHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [isTyping, setIsTyping] = useState(true);
-  const [typedText, setTypedText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentDirectory, setCurrentDirectory] = useState('/home/jordynheil/website');
+ 
+  const [isBooting, setIsBooting] = useState(true);
+  const [bootMessage, setBootMessage] = useState('');
+  const [bootStep, setBootStep] = useState(0);
   const inputRef = useRef(null);
   const containerRef = useRef(null);
 
-  const introMessage = `Welcome to Jordyn Heil's Terminal v1.0.0
-Initializing system...
-Loading user profile...
-Establishing secure connection...
-System ready.
-Type 'help' for available commands.`;
+  const bootMessages = [
+    'BIOS Version 2.1.0',
+    'Initializing system components...',
+    'Loading kernel modules...',
+    'Mounting filesystems...',
+    'Starting network services...',
+    'Establishing secure connection...',
+    'Loading user profile...',
+    'System ready.',
+    'Welcome to Jordyn Heil\'s Terminal v1.0.0'
+  ];
+
+  const introMessage = `Type 'help' for available commands.`;
 
   const commands = {
     help: {
@@ -189,7 +185,8 @@ Type 'help' for available commands.`;
   linkedin - Open LinkedIn profile
   email - Show contact email
   clear - Clear terminal
-  ls - List files
+  ls - List files in current directory
+  cd [directory] - Change directory
   cat [file] - Read file contents
   whoami - Show current user
   date - Show current date
@@ -336,22 +333,138 @@ Hardware & Systems:
     },
     ls: {
       description: 'List files',
-      execute: () => `Directory listing:
-📁 projects/
-📁 education/
-📁 experience/
-📁 skills/
-📁 contact/
-📄 resume.txt
-📄 about.txt
-📄 github.txt`
+      execute: () => {
+        const getCurrentFiles = () => {
+          const fileSystem = {
+            '/home/jordynheil/website': {
+              type: 'directory',
+              contents: {
+                'projects/': { type: 'directory' },
+                'education/': { type: 'directory' },
+                'experience/': { type: 'directory' },
+                'skills/': { type: 'directory' },
+                'contact/': { type: 'directory' },
+                'resume.txt': { type: 'file' },
+                'about.txt': { type: 'file' },
+                'github.txt': { type: 'file' }
+              }
+            },
+            '/home/jordynheil/website/projects': {
+              type: 'directory',
+              contents: {
+                'ieee-robotics/': { type: 'directory' },
+                'maze-solver/': { type: 'directory' },
+                'sdr-amplifier/': { type: 'directory' },
+                'chess-board/': { type: 'directory' }
+              }
+            },
+            '/home/jordynheil/website/projects/ieee-robotics': {
+              type: 'directory',
+              contents: {
+                'design.f3d': { type: 'file' },
+                'code.cpp': { type: 'file' },
+                'README.md': { type: 'file' }
+              }
+            },
+            '/home/jordynheil/website/projects/maze-solver': {
+              type: 'directory',
+              contents: {
+                'main.c': { type: 'file' },
+                'pid.h': { type: 'file' },
+                'schematic.pdf': { type: 'file' }
+              }
+            },
+            '/home/jordynheil/website/projects/sdr-amplifier': {
+              type: 'directory',
+              contents: {
+                'circuit.lts': { type: 'file' },
+                'simulation.txt': { type: 'file' },
+                'design.pdf': { type: 'file' }
+              }
+            },
+            '/home/jordynheil/website/projects/chess-board': {
+              type: 'directory',
+              contents: {
+                'sensors.h': { type: 'file' },
+                'api.py': { type: 'file' },
+                'README.md': { type: 'file' }
+              }
+            },
+            '/home/jordynheil/website/education': {
+              type: 'directory',
+              contents: {
+                'vanderbilt/': { type: 'directory' },
+                'transcript.pdf': { type: 'file' },
+                'awards.txt': { type: 'file' }
+              }
+            },
+            '/home/jordynheil/website/education/vanderbilt': {
+              type: 'directory',
+              contents: {
+                'ece/': { type: 'directory' },
+                'math/': { type: 'directory' },
+                'minors/': { type: 'directory' }
+              }
+            },
+            '/home/jordynheil/website/experience': {
+              type: 'directory',
+              contents: {
+                'teaching-assistant/': { type: 'directory' },
+                'lab-manager/': { type: 'directory' },
+                'naval-intern/': { type: 'directory' },
+                'arc-researcher/': { type: 'directory' }
+              }
+            },
+            '/home/jordynheil/website/skills': {
+              type: 'directory',
+              contents: {
+                'programming/': { type: 'directory' },
+                'hardware/': { type: 'directory' },
+                'software/': { type: 'directory' }
+              }
+            },
+            '/home/jordynheil/website/contact': {
+              type: 'directory',
+              contents: {
+                'email.txt': { type: 'file' },
+                'linkedin.txt': { type: 'file' },
+                'github.txt': { type: 'file' }
+              }
+            }
+          };
+
+          const currentDir = fileSystem[currentDirectory];
+          if (!currentDir || currentDir.type !== 'directory') {
+            return 'Error: Directory not found';
+          }
+
+          const files = Object.keys(currentDir.contents);
+          const directories = files.filter(file => currentDir.contents[file].type === 'directory');
+          const regularFiles = files.filter(file => currentDir.contents[file].type === 'file');
+
+          let output = `Directory listing for ${currentDirectory}:\n`;
+          
+          if (directories.length > 0) {
+            output += directories.map(dir => `📁 ${dir}`).join('\n') + '\n';
+          }
+          
+          if (regularFiles.length > 0) {
+            output += regularFiles.map(file => `📄 ${file}`).join('\n');
+          }
+
+          return output;
+        };
+
+        return getCurrentFiles();
+      }
     },
     cat: {
       description: 'Read file contents',
       execute: (args) => {
         if (!args[0]) return 'Usage: cat [filename]';
         
-        const files = {
+        const fileName = args[0];
+        const fileSystem = {
           'resume.txt': `Jordyn Heil - Resume
 ====================
 Education: Vanderbilt University (ECE & Math)
@@ -368,10 +481,120 @@ Passionate about software engineering and innovation`,
 ==============
 Username: JordynH
 URL: https://github.com/JordynH
+Focus: Robotics, Embedded Systems, Software Engineering`,
+          'design.f3d': `Fusion 360 Design File
+========================
+IEEE Robotics Competition Robot
+- 3D printed chassis
+- Motor mounting brackets
+- Sensor housing
+- Weight optimized for competition`,
+          'code.cpp': `ESP32 PID Control Code
+=====================
+#include <PID_v1.h>
+
+// PID parameters for robot control
+double Setpoint, Input, Output;
+PID myPID(&Input, &Output, &Setpoint, 2, 5, 1, DIRECT);
+
+void setup() {
+  // Initialize PID controller
+  myPID.SetMode(AUTOMATIC);
+}`,
+          'README.md': `IEEE Robotics Project
+==================
+Led team of 5, placed 3rd out of 55 teams
+Designed robot in Fusion 360
+Programmed ESP32 with PID control`,
+          'main.c': `ATmega328P Maze Solver
+======================
+#include <avr/io.h>
+#include "pid.h"
+
+// PWM control for motors
+void init_pwm() {
+  // Configure PWM for motor control
+}`,
+          'pid.h': `PID Algorithm Header
+===================
+// PID control for autonomous navigation
+typedef struct {
+  double kp, ki, kd;
+  double setpoint, input, output;
+} PID_Controller;`,
+          'schematic.pdf': `Circuit Schematic
+==================
+Maze solving robot electronics
+- Motor driver circuit
+- Sensor connections
+- Power distribution`,
+          'circuit.lts': `LTspice Circuit File
+====================
+SDR Front-End Amplifier Design
+- Multistage amplifier
+- High gain configuration
+- Bandwidth optimization`,
+          'simulation.txt': `Simulation Results
+==================
+Gain: 40dB
+Bandwidth: 1MHz-100MHz
+Noise Figure: 2.1dB`,
+          'design.pdf': `Amplifier Design Report
+======================
+SDR Front-End Amplifier
+- Multistage amplifier design
+- LTspice simulation
+- High gain, bandwidth optimization`,
+          'sensors.h': `Hall Effect Sensors
+==================
+// Smart chessboard sensor array
+#define NUM_SQUARES 64
+typedef struct {
+  int x, y;
+  bool occupied;
+} ChessSquare;`,
+          'api.py': `Stockfish Integration
+====================
+import requests
+
+def get_stockfish_move(fen):
+    # HTTP API integration
+    # Returns best move from Stockfish engine`,
+          'transcript.pdf': `Academic Transcript
+====================
+Vanderbilt University
+GPA: 4.0/4.0
+Honors in ECE and Mathematics`,
+          'awards.txt': `Awards & Honors
+================
+• Department of Defense SMART Scholarship
+• ECE Program Award (top ECE graduate)
+• Summa Cum Laude
+• CF Chen Best Design Award
+• SyBBURE Research Stipend
+• Dean's List - All Semesters`,
+          'email.txt': `Contact Information
+====================
+Email: jordynheil@gmail.com
+Available for opportunities in:
+- Robotics Engineering
+- Software Development
+- Hardware Design`,
+          'linkedin.txt': `LinkedIn Profile
+=================
+URL: https://linkedin.com/in/jordynheil
+Professional network for:
+- Engineering opportunities
+- Industry connections
+- Technical discussions`,
+          'github.txt': `GitHub Profile
+==============
+Username: JordynH
+URL: https://github.com/JordynH
 Focus: Robotics, Embedded Systems, Software Engineering`
         };
         
-        return files[args[0]] || `File '${args[0]}' not found.`;
+        return fileSystem[fileName] || `File '${fileName}' not found.`;
       }
     },
     whoami: {
@@ -382,9 +605,64 @@ Focus: Robotics, Embedded Systems, Software Engineering`
       description: 'Show current date',
       execute: () => new Date().toString()
     },
+    cd: {
+      description: 'Change directory',
+      execute: (args) => {
+        if (!args[0]) {
+          setCurrentDirectory('/home/jordynheil/website');
+          return 'Changed to home directory';
+        }
+
+        const target = args[0];
+        let newPath = currentDirectory;
+
+        if (target === '..') {
+          // Go up one directory
+          const pathParts = currentDirectory.split('/').filter(part => part);
+          if (pathParts.length > 2) { // Keep at least /home/jordynheil
+            pathParts.pop();
+            newPath = '/' + pathParts.join('/');
+          } else {
+            newPath = '/home/jordynheil/website';
+          }
+        } else if (target.startsWith('/')) {
+          // Absolute path
+          newPath = target;
+        } else {
+          // Relative path
+          if (!currentDirectory.endsWith('/')) {
+            newPath = currentDirectory + '/' + target;
+          } else {
+            newPath = currentDirectory + target;
+          }
+        }
+
+        // Validate the path exists in our file system
+        const validPaths = [
+          '/home/jordynheil/website',
+          '/home/jordynheil/website/projects',
+          '/home/jordynheil/website/projects/ieee-robotics',
+          '/home/jordynheil/website/projects/maze-solver',
+          '/home/jordynheil/website/projects/sdr-amplifier',
+          '/home/jordynheil/website/projects/chess-board',
+          '/home/jordynheil/website/education',
+          '/home/jordynheil/website/education/vanderbilt',
+          '/home/jordynheil/website/experience',
+          '/home/jordynheil/website/skills',
+          '/home/jordynheil/website/contact'
+        ];
+
+        if (validPaths.includes(newPath)) {
+          setCurrentDirectory(newPath);
+          return `Changed directory to ${newPath}`;
+        } else {
+          return `cd: ${target}: No such file or directory`;
+        }
+      }
+    },
     pwd: {
       description: 'Show current directory',
-      execute: () => '/home/jordynheil/website'
+      execute: () => currentDirectory
     },
     echo: {
       description: 'Echo text',
@@ -509,26 +787,27 @@ ${randomQuote}`;
     }
   };
 
-  // Typewriter effect for intro message
+  // Boot sequence effect
   useEffect(() => {
-    if (isTyping && currentIndex < introMessage.length) {
+    if (isBooting && bootStep < bootMessages.length) {
       const timer = setTimeout(() => {
-        setTypedText(introMessage.slice(0, currentIndex + 1));
-        setCurrentIndex(currentIndex + 1);
-      }, 20); // Four times as fast as original
+        setBootMessage(bootMessages.slice(0, bootStep + 1).join('\n'));
+        setBootStep(bootStep + 1);
+      }, 200);
       return () => clearTimeout(timer);
-    } else if (currentIndex >= introMessage.length) {
-      // Add a small delay before finishing
+    } else if (bootStep >= bootMessages.length) {
       const finishTimer = setTimeout(() => {
-        setIsTyping(false);
-      }, 500);
+        setIsBooting(false);
+      }, 1000);
       return () => clearTimeout(finishTimer);
     }
-  }, [currentIndex, isTyping, introMessage]);
+  }, [bootStep, isBooting, bootMessages]);
+
+
 
   useEffect(() => {
-    // Only scroll when a new command is added and we're not typing
-    if (containerRef.current && !isTyping && history.length > 0) {
+    // Only scroll when a new command is added and we're not booting
+    if (containerRef.current && !isBooting && history.length > 0) {
       const container = containerRef.current;
       const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 10;
       
@@ -537,30 +816,44 @@ ${randomQuote}`;
         container.scrollTop = container.scrollHeight;
       }
     }
-  }, [history, isTyping]);
+  }, [history, isBooting]);
 
   useEffect(() => {
-    if (!isTyping && inputRef.current) {
+    if (!isBooting && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isTyping]);
+  }, [isBooting]);
 
   return (
     <TerminalOverlay
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={{ 
+        opacity: 0,
+        scale: 0.95,
+        y: -20
+      }}
+      animate={{ 
+        opacity: 1,
+        scale: 1,
+        y: 0
+      }}
+      exit={{ 
+        opacity: 0,
+        scale: 0.95,
+        y: 20
+      }}
+      transition={{ 
+        duration: 0.8,
+        ease: "easeOut"
+      }}
     >
-      <MatrixRain />
       <ExitButton onClick={() => window.history.back()}>
         EXIT
       </ExitButton>
       
       <TerminalContainer ref={containerRef}>
-        {isTyping ? (
+        {isBooting ? (
           <TerminalLine>
-            <TypewriterText>{typedText}</TypewriterText>
+            <TypewriterText>{bootMessage}</TypewriterText>
           </TerminalLine>
         ) : (
           <>
