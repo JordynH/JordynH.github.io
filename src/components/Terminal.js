@@ -346,7 +346,7 @@ Hardware & Systems:
                 'contact/': { type: 'directory' },
                 'resume.txt': { type: 'file' },
                 'about.txt': { type: 'file' },
-                'github.txt': { type: 'file' }
+                'github-profile.txt': { type: 'file' }
               }
             },
             '/home/jordynheil/website/projects': {
@@ -428,7 +428,7 @@ Hardware & Systems:
               contents: {
                 'email.txt': { type: 'file' },
                 'linkedin.txt': { type: 'file' },
-                'github.txt': { type: 'file' }
+                'github-profile.txt': { type: 'file' }
               }
             }
           };
@@ -587,7 +587,7 @@ Professional network for:
 - Engineering opportunities
 - Industry connections
 - Technical discussions`,
-          'github.txt': `GitHub Profile
+          'github-profile.txt': `GitHub Profile
 ==============
 Username: JordynH
 URL: https://github.com/JordynH
@@ -696,203 +696,4 @@ ${randomQuote}`;
     },
     robot: {
       description: 'Show robot status',
-      execute: () => `🤖 Robot Status:
-  • IEEE Competition Bot: ONLINE
-  • Maze Solver: STANDBY
-  • Chess Table: ACTIVE
-  • Control Algorithms: OPTIMIZED
-  • PID Parameters: TUNED
-  • All systems operational`
-    },
-    solve: {
-      description: 'Solve a puzzle',
-      execute: () => `🧩 Puzzle Challenge:
-  
-  You encounter a Rubik's Cube...
-  The cube is in a solved state.
-  You solve it in 0 moves.
-  Perfect! You're a puzzle master!`
-    },
-    hack: {
-      description: 'Try to hack the system',
-      execute: () => `🚫 Access Denied!
-  
-  Nice try, but this system is protected by:
-  • Advanced firewall
-  • Quantum encryption
-  • Neural network security
-  
-  Maybe try 'help' instead?`
-    },
-    exit: {
-      description: 'Exit terminal',
-      execute: () => {
-        window.history.back();
-        return 'Exiting terminal...';
-      }
-    }
-  };
-
-  const executeCommand = (command) => {
-    const [cmd, ...args] = command.trim().split(' ');
-    
-    if (!cmd) return '';
-    
-    const commandObj = commands[cmd.toLowerCase()];
-    
-    if (!commandObj) {
-      return `Command '${cmd}' not found. Type 'help' for available commands.`;
-    }
-    
-    const result = commandObj.execute(args);
-    if (result === null) return ''; // For clear command
-    return result;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!currentCommand.trim()) return;
-    
-    const newHistory = [...history, { type: 'command', content: currentCommand }];
-    const output = executeCommand(currentCommand);
-    
-    if (output) {
-      newHistory.push({ type: 'output', content: output });
-    }
-    
-    setHistory(newHistory);
-    setCommandHistory([...commandHistory, currentCommand]);
-    setCurrentCommand('');
-    setHistoryIndex(-1);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (commandHistory.length > 0) {
-        const newIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
-        setHistoryIndex(newIndex);
-        setCurrentCommand(commandHistory[commandHistory.length - 1 - newIndex]);
-      }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (historyIndex > 0) {
-        const newIndex = historyIndex - 1;
-        setHistoryIndex(newIndex);
-        setCurrentCommand(commandHistory[commandHistory.length - 1 - newIndex]);
-      } else if (historyIndex === 0) {
-        setHistoryIndex(-1);
-        setCurrentCommand('');
-      }
-    }
-  };
-
-  // Boot sequence effect
-  useEffect(() => {
-    if (isBooting && bootStep < bootMessages.length) {
-      const timer = setTimeout(() => {
-        setBootMessage(bootMessages.slice(0, bootStep + 1).join('\n'));
-        setBootStep(bootStep + 1);
-      }, 200);
-      return () => clearTimeout(timer);
-    } else if (bootStep >= bootMessages.length) {
-      const finishTimer = setTimeout(() => {
-        setIsBooting(false);
-      }, 1000);
-      return () => clearTimeout(finishTimer);
-    }
-  }, [bootStep, isBooting, bootMessages]);
-
-
-
-  useEffect(() => {
-    // Only scroll when a new command is added and we're not booting
-    if (containerRef.current && !isBooting && history.length > 0) {
-      const container = containerRef.current;
-      const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 10;
-      
-      // Only scroll if we're not already at the bottom
-      if (!isAtBottom) {
-        container.scrollTop = container.scrollHeight;
-      }
-    }
-  }, [history, isBooting]);
-
-  useEffect(() => {
-    if (!isBooting && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isBooting]);
-
-  return (
-    <TerminalOverlay
-      initial={{ 
-        opacity: 0,
-        scale: 0.95,
-        y: -20
-      }}
-      animate={{ 
-        opacity: 1,
-        scale: 1,
-        y: 0
-      }}
-      exit={{ 
-        opacity: 0,
-        scale: 0.95,
-        y: 20
-      }}
-      transition={{ 
-        duration: 0.8,
-        ease: "easeOut"
-      }}
-    >
-      <ExitButton onClick={() => window.history.back()}>
-        EXIT
-      </ExitButton>
-      
-      <TerminalContainer ref={containerRef}>
-        {isBooting ? (
-          <TerminalLine>
-            <TypewriterText>{bootMessage}</TypewriterText>
-          </TerminalLine>
-        ) : (
-          <>
-            <TerminalLine>
-              {introMessage}
-            </TerminalLine>
-            
-            {history.map((item, index) => (
-              <TerminalLine key={index}>
-                {item.type === 'command' ? (
-                  <>
-                    <Prompt>$</Prompt>
-                    {item.content}
-                  </>
-                ) : (
-                  <CommandResponse>{item.content}</CommandResponse>
-                )}
-              </TerminalLine>
-            ))}
-            
-            <form onSubmit={handleSubmit}>
-              <CommandInput>
-                <Prompt>$</Prompt>
-                <Input
-                  ref={inputRef}
-                  type="text"
-                  value={currentCommand}
-                  onChange={(e) => setCurrentCommand(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Enter command..."
-                  autoFocus
-                />
-              </CommandInput>
-            </form>
-          </>
-        )}
-      </TerminalContainer>
-    </TerminalOverlay>
-  );
-};
-
-export default Terminal; 
+      execute: () => `
