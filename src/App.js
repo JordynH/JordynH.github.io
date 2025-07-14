@@ -6,6 +6,7 @@ import Navigation from './components/Navigation';
 import Home from './components/Home';
 import Resume from './components/Resume';
 import Terminal from './components/Terminal';
+import Projects from './components/Projects';
 import TypewriterText from './components/TypewriterText';
 import FlipProfileImage from './components/FlipProfileImage';
 import './App.css';
@@ -85,6 +86,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/resume" element={<Resume />} />
             <Route path="/terminal" element={<Terminal />} />
+            <Route path="/projects" element={<Projects />} />
           </Routes>
         </AnimatePresence>
       </AppContainer>
